@@ -41,6 +41,11 @@ class NewsletterService
 
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Проверка, что $users является массивом
+        if (!is_array($users)) {
+            throw new RuntimeException('Ошибка получения списка пользователей.');
+        }
+
         // Обход пользователей и добавление в очередь рассылки
         foreach ($users as $user) {
             $userId = $user['id'];
@@ -58,12 +63,7 @@ class NewsletterService
                 $insertStmt->bindParam(':title', $title);
                 $insertStmt->bindParam(':message', $message);
                 $insertStmt->execute();
-                $this->sendMessage($title, $message);
             }
         }
-    }
-
-    private function sendMessage(string $title, string $message): void
-    {
     }
 }

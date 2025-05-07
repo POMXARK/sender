@@ -2,3 +2,6 @@ parameters:
     level: max
     paths:
         - %currentWorkingDirectory%
+    phpVersion: 70400 # Указываем версию PHP 7.4
+    ignoreErrors:
+        - '#While loop condition is always true\.#'

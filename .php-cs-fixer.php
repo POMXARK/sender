@@ -16,7 +16,10 @@ return (new Config())
         '@Symfony' => true, // Использование правил Symfony
         'array_syntax' => ['syntax' => 'short'], // Использование короткого синтаксиса массива
         'no_unused_imports' => true, // Удаление неиспользуемых импортов
-        'global_namespace_import' => true
+        'global_namespace_import' => true,
+        'declare_strict_types' => true,
+        'single_quote' => true,
         // Другие правила могут быть добавлены по мере необходимости
     ])
+    ->setRiskyAllowed(true)
     ->setFinder($finder);

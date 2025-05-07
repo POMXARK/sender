@@ -1,0 +1,16 @@
+[Unit]
+Description=Queue Worker Service
+After=network.target
+
+[Service]
+WorkingDirectory=/path/to/your/project  # Укажите путь к папке вашего проекта
+ExecStart=/usr/bin/php /path/to/your/project/run.php queue:run App\Jobs\SendEmailJob
+Restart=always
+User=your_username  # Укажите имя пользователя
+Group=your_group    # Укажите группу
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=queue-worker
+
+[Install]
+WantedBy=multi-user.target

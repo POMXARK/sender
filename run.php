@@ -5,10 +5,16 @@ declare(strict_types=1);
 require_once 'App/Common/Database.php';
 require_once 'App/Common/MigrationManager.php';
 require_once 'App/AppConfig.php';
+require_once 'App/Common/QueueManager.php';
+
+require_once 'autoload.php'; // Подключаем файл автозагрузки
 
 use App\AppConfig;
 use App\Common\Database;
 use App\Common\MigrationManager;
+use App\Common\QueueManager;
+
+$queueManager = new QueueManager(AppConfig::JOBS);
 
 // Получаем аргумент командной строки
 $command = $argv[1] ?? null;
@@ -46,8 +52,19 @@ switch ($command) {
             echo "Не указано имя миграции. Используйте 'db:create MigrationName'.\n";
         }
         break;
+    case 'queue:run':
+        // Запуск конкретного класса задачи
+        if (isset($argv[2]) && class_exists($argv[2]) && is_subclass_of($argv[2], 'App\Jobs\JobInterface')) {
+            $jobClass = $argv[2];
+            $queueManager->push($jobClass, []); // Здесь можно передать данные, если нужно
+            $queueManager->listen(); // Запускаем обработку очереди
+            echo "Обработка очереди завершена для класса {$jobClass}.\n";
+        } else {
+            echo "Некорректный класс задачи. Убедитесь, что он существует и реализует интерфейс JobInterface.\n";
+        }
+        break;
 
     default:
-        echo "Неверная команда. Используйте 'db:migrate' для выполнения миграций, 'db:rollback' для отката или 'db:create' для создания новой миграции.\n";
+        echo "Неверная команда. Используйте 'db:migrate', 'db:rollback', 'db:create', 'queue:add' или 'queue:run'.\n";
         break;
 }

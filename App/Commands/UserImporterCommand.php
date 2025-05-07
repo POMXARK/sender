@@ -48,19 +48,22 @@ final class UserImporterCommand
             stream_filter_prepend($handle, 'convert.iconv.UTF-8/UTF-8');
 
             while (($data = fgetcsv($handle, 1000)) !== false) {
-                // Удаление пустых значений из массива
-                $data = array_filter($data);
+                // Убедитесь, что $data является массивом
+                if (is_array($data)) {
+                    // Удаление пустых значений из массива
+                    $data = array_filter($data);
 
-                // Проверка на наличие двух колонок
-                if (2 === count($data)) {
-                    $number = trim($data[0]);
-                    $name = trim($data[1]);
+                    // Проверка на наличие двух колонок
+                    if (2 === count($data)) {
+                        $number = trim($data[0]);
+                        $name = trim($data[1]);
 
-                    // Вставка пользователя в базу данных
-                    $stmt = $pdo->prepare('INSERT OR IGNORE INTO users (number, name) VALUES (:number, :name)');
-                    $stmt->bindParam(':number', $number);
-                    $stmt->bindParam(':name', $name);
-                    $stmt->execute();
+                        // Вставка пользователя в базу данных
+                        $stmt = $pdo->prepare('INSERT OR IGNORE INTO users (number, name) VALUES (:number, :name)');
+                        $stmt->bindParam(':number', $number);
+                        $stmt->bindParam(':name', $name);
+                        $stmt->execute();
+                    }
                 }
             }
             fclose($handle);

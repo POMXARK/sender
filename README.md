@@ -22,3 +22,22 @@ http://localhost:8000/user-importer/import?file=Данные%20для%20тест
 ```
 http://localhost:8000/newsletter/add
 ```
+
+Запуск очереди рассылки
+```shell
+php run.php  queue:run "App\Jobs\SendEmailJob"
+```
+
+systemd
+```shell
+/etc/systemd/system/queue-worker.service
+sudo systemctl daemon-reload
+sudo systemctl start queue-worker
+sudo systemctl enable queue-worker 
+sudo systemctl status queue-worker
+```
+
+crontab
+```shell
+@reboot /usr/bin/php /path/to/your/run.php queue:run App\Jobs\SendEmailJob > /dev/null 2>&1 &
+```

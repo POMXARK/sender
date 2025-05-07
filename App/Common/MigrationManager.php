@@ -98,9 +98,9 @@ final class MigrationManager
         $files = [];
         $dirPath = __DIR__.'/../../migrations';
         $dir = new DirectoryIterator($dirPath);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isFile() && 'php' === $fileinfo->getExtension()) {
-                $files[] = $fileinfo->getPathname();
+        foreach ($dir as $fileInfo) {
+            if ($fileInfo->isFile() && 'php' === $fileInfo->getExtension()) {
+                $files[] = $fileInfo->getPathname();
             }
         }
 
@@ -169,8 +169,8 @@ final class MigrationManager
     public function createMigration(string $name): void
     {
         $timestamp = date('Y_m_d_His');
-        $fileName = "{$timestamp}_{$name}.php";
-        $filePath = __DIR__."/../../migrations/{$fileName}";
+        $fileName = "{$timestamp}_$name.php";
+        $filePath = __DIR__."/../../migrations/$fileName";
 
         // Преобразование имени из snake_case в CamelCase
         $className = str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
