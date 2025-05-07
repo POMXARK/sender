@@ -28,9 +28,30 @@ final class NewsletterController
      */
     public function addAction(): array
     {
-        // Параметры рассылки
-        $title = 'Название рассылки';
-        $message = 'Текст рассылки';
+        // Получение данных из тела запроса
+        $json = file_get_contents('php://input');
+
+        // Проверка, что $json является строкой
+        if (false === $json) {
+            return ['error' => 'Не удалось получить данные из запроса.'];
+        }
+
+        // Декодирование JSON
+        $data = json_decode($json, true);
+
+        // Проверка на ошибки декодирования JSON
+        if (null === $data && JSON_ERROR_NONE !== json_last_error()) {
+            return ['error' => 'Неверный формат JSON.'];
+        }
+
+        // Проверка наличия обязательных параметров
+        if (!is_array($data) || !isset($data['title'], $data['message'])) {
+            return ['error' => 'Параметры title и message обязательны.'];
+        }
+
+        // Убедитесь, что параметры являются строками
+        $title = (string) $data['title'];
+        $message = (string) $data['message'];
 
         // Добавление рассылки через сервис
         $this->newsletterService->addNewsletter($title, $message);

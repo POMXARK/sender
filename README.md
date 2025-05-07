@@ -20,7 +20,9 @@ http://localhost:8000/user-importer/import?file=Данные%20для%20тест
 ```
 Обход пользователей и добавление в очередь рассылки:
 ```
-http://localhost:8000/newsletter/add
+curl -X POST http://localhost:8000/newsletter/add \
+     -H "Content-Type: application/json" \
+     -d '{"title": "Название рассылки", "message": "Текст рассылки"}'
 ```
 
 Запуск очереди рассылки
